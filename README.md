@@ -1,150 +1,169 @@
-# Todo List
+<div align="center">
 
-## Descrição
+# ✅ Todo List
+### Gerenciador de tarefas com Django
 
-O **Todo List** é uma aplicação web desenvolvida com **Django** para gerenciamento de tarefas. O sistema permite cadastrar, visualizar, atualizar, excluir e marcar tarefas como concluídas, além de organizar as atividades por meio de tags.
+**Aplicação web para criar, organizar e acompanhar tarefas e etiquetas.**
 
-O projeto tem como objetivo praticar os principais conceitos do desenvolvimento web com Django, incluindo criação de modelos, formulários, views baseadas em classes, rotas, templates e integração com banco de dados.
+![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django](https://img.shields.io/badge/Django-6.0.6-092E20?style=for-the-badge&logo=django&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
+![HTML](https://img.shields.io/badge/Django-Templates-475569?style=for-the-badge)
 
-## Funcionalidades
+[**Funcionalidades**](#-funcionalidades) · [**Arquitetura**](#-arquitetura) · [**Como executar**](#-como-executar) · [**Rotas**](#-rotas-da-aplicação)
 
-* Listagem de tarefas cadastradas;
-* Criação de novas tarefas;
-* Edição de tarefas existentes;
-* Exclusão de tarefas;
-* Marcação de tarefas como concluídas ou não concluídas;
-* Definição de prazo para conclusão da tarefa;
-* Associação de tags às tarefas;
-* Criação, edição, listagem e exclusão de tags;
-* Interface simples baseada em templates Django.
+</div>
 
-## Tecnologias utilizadas
+---
 
-* Python
-* Django
-* SQLite
-* HTML
-* Django Templates
+## 🎯 Visão geral
 
-## Estrutura do projeto
+O **Todo List** é um projeto web desenvolvido para praticar o ecossistema **Python e Django** com um caso de uso simples: **gerenciar tarefas e classificá-las por tags**.
+
+A aplicação utiliza **Django ORM**, views baseadas em classes, `ModelForm`, templates e banco de dados **SQLite**. A lógica de CRUD é organizada por responsabilidades, sem depender de uma API externa.
+
+> **Estado do projeto:** aplicação educacional para execução local. Não há testes automatizados de negócio implementados em `tasks/tests.py`; a presença desse arquivo não deve ser interpretada como cobertura de testes.
+
+## ✨ Funcionalidades
+
+| Recurso | Descrição |
+|:--|:--|
+| 📝 **Tarefas** | Criar, listar, editar e excluir tarefas |
+| ✅ **Conclusão** | Alternar o status de concluída/pendente por requisição POST |
+| 📅 **Prazos** | Definir data e hora de vencimento opcional |
+| 🏷️ **Tags** | Criar, listar, editar e excluir etiquetas |
+| 🔗 **Organização** | Associar várias tags à mesma tarefa |
+| 📌 **Listagem** | Mostrar tarefas pendentes primeiro, depois por criação mais recente |
+| 🛠️ **Administração** | Estrutura Django com painel administrativo padrão |
+
+## 🏗️ Arquitetura
+
+```mermaid
+flowchart LR
+    A["Navegador"] --> B["Django Templates / Views"]
+    B --> C["Forms • Validações"]
+    B --> D["Django ORM"]
+    D --> E[("SQLite")]
+```
+
+### Modelos de dados
+
+| Modelo | Campos principais |
+|:--|:--|
+| **Task** | `content`, `created_at`, `deadline`, `is_completed` |
+| **Tag** | `name` único |
+| **Relacionamento** | `Task.tags`: muitos-para-muitos |
+
+A relação de tags é carregada de forma antecipada nas listagens por `prefetch_related`. As tarefas são ordenadas por status e data de criação.
+
+### Estrutura do repositório
 
 ```text
 todo-list/
 ├── config/
-│   ├── settings.py
-│   ├── urls.py
+│   ├── settings.py        # Configurações Django e SQLite
+│   ├── urls.py            # Rotas principais
 │   ├── asgi.py
 │   └── wsgi.py
 ├── tasks/
-│   ├── migrations/
-│   ├── templates/
-│   │   └── tasks/
-│   ├── admin.py
-│   ├── apps.py
-│   ├── forms.py
-│   ├── models.py
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
+│   ├── migrations/        # Migração inicial
+│   ├── templates/tasks/   # Telas HTML
+│   ├── models.py          # Task e Tag
+│   ├── forms.py           # ModelForms
+│   ├── views.py           # CRUD e alteração de status
+│   ├── urls.py            # Rotas de tarefas e tags
+│   └── tests.py           # Estrutura inicial; sem testes de negócio
 ├── manage.py
 ├── requirements.txt
 └── README.md
 ```
 
-## Modelos principais
+## 🚀 Como executar
 
-### Task
+### Pré-requisitos
 
-Representa uma tarefa cadastrada no sistema.
-
-Principais campos:
-
-* `content`: descrição da tarefa;
-* `created_at`: data e horário de criação;
-* `deadline`: prazo opcional para conclusão;
-* `is_completed`: indica se a tarefa foi concluída;
-* `tags`: relação com uma ou mais tags.
-
-### Tag
-
-Representa uma categoria ou marcador utilizado para organizar tarefas.
-
-Principal campo:
-
-* `name`: nome da tag.
-
-## Como executar o projeto localmente
+- **Python 3.12 ou superior**, compatível com Django 6.
+- Git e terminal (Linux, macOS ou GitHub Codespaces).
+- Ambiente virtual Python recomendado.
 
 ### 1. Clone o repositório
 
 ```bash
-git clone https://github.com/WalterMatheusgg/todo-list.git
-```
-
-### 2. Acesse a pasta do projeto
-
-```bash
+git clone -b dev https://github.com/WalterMatheusgg/todo-list.git
 cd todo-list
 ```
 
-### 3. Acesse a branch de desenvolvimento
+> Depois que `dev` for definida como branch padrão, também será possível clonar normalmente sem `-b dev`.
+
+### 2. Configure o ambiente
 
 ```bash
-git checkout dev
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-### 4. Crie e ative um ambiente virtual
-
-No Linux/macOS:
+### 3. Inicialize o banco e execute a aplicação
 
 ```bash
-python -m venv venv
-source venv/bin/activate
-```
-
-No Windows:
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 5. Instale as dependências
-
-```bash
-pip install -r requirements.txt
-```
-
-### 6. Execute as migrações
-
-```bash
+python manage.py check
 python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
 ```
 
-### 7. Inicie o servidor
+No ambiente local, abra **http://127.0.0.1:8000/**. No **GitHub Codespaces**, utilize a aba **Ports** para abrir a porta `8000` encaminhada.
+
+Para criar um administrador local (opcional):
 
 ```bash
-python manage.py runserver
+python manage.py createsuperuser
 ```
 
-Depois, acesse no navegador:
+O Django criará `db.sqlite3` localmente após as migrações.
 
-```text
-http://127.0.0.1:8000/
+## 🧭 Rotas da aplicação
+
+| Método | Caminho | Ação |
+|:--|:--|:--|
+| GET | `/` | Listar tarefas |
+| GET/POST | `/tasks/create/` | Criar tarefa |
+| GET/POST | `/tasks/<id>/update/` | Editar tarefa |
+| GET/POST | `/tasks/<id>/delete/` | Confirmar/excluir tarefa |
+| POST | `/tasks/<id>/toggle/` | Alternar conclusão |
+| GET | `/tags/` | Listar tags |
+| GET/POST | `/tags/create/` | Criar tag |
+| GET/POST | `/tags/<id>/update/` | Editar tag |
+| GET/POST | `/tags/<id>/delete/` | Confirmar/excluir tag |
+| GET | `/admin/` | Painel Django |
+
+## 🧪 Testes e verificações
+
+Validações que podem ser realizadas no ambiente local:
+
+```bash
+python manage.py check
+python manage.py makemigrations --check --dry-run
+python manage.py test
 ```
 
-## Rotas principais
+**Importante:** `python manage.py test` pode finalizar sem erros mesmo quando nenhum teste de negócio está implementado. Antes de afirmar cobertura, inclua testes para criação, edição, conclusão, exclusão, tags e validações.
 
-* `/` - lista de tarefas;
-* `/tasks/create/` - criação de tarefa;
-* `/tags/` - lista de tags;
-* `/tags/create/` - criação de tag;
-* `/admin/` - painel administrativo do Django.
+## 🔒 Notas de segurança
 
-## Objetivo do projeto
+A configuração atual destina-se ao **desenvolvimento**: utiliza `DEBUG=True` e uma `SECRET_KEY` definida no arquivo de configurações. Antes de qualquer publicação externa, mova os segredos para variáveis de ambiente, defina hosts permitidos e revise as configurações de segurança do Django. Não utilize dados reais ou sensíveis nesta instância de estudo.
 
-Este projeto foi desenvolvido com finalidade educacional, buscando consolidar conhecimentos sobre desenvolvimento web com Django. A aplicação demonstra a construção de um CRUD completo, utilizando separação entre modelos, formulários, views, rotas e templates.
+## 👨‍💻 Autor
 
-## Autor
+**Walter Matheus Soares da Silva**  
+Desenvolvedor Full Stack | Java · Spring Boot · Angular
 
-Desenvolvido por **Walter Matheus**.
+[![GitHub](https://img.shields.io/badge/GitHub-WalterMatheusgg-181717?style=flat-square&logo=github)](https://github.com/WalterMatheusgg)
+
+---
+
+<div align="center">
+
+**Todo List** · Um projeto de estudo em desenvolvimento web com Python e Django.
+
+</div>

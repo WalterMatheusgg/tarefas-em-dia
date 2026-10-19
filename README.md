@@ -59,7 +59,7 @@ A relação de tags é carregada de forma antecipada nas listagens por `prefetch
 ### Estrutura do repositório
 
 ```text
-todo-list/
+tarefas-em-dia/
 ├── config/
 │   ├── settings.py        # Configurações Django e SQLite
 │   ├── urls.py            # Rotas principais
@@ -89,8 +89,8 @@ todo-list/
 ### 1. Clone o repositório
 
 ```bash
-git clone -b dev https://github.com/WalterMatheusgg/todo-list.git
-cd todo-list
+git clone -b dev https://github.com/WalterMatheusgg/tarefas-em-dia.git
+cd tarefas-em-dia
 ```
 
 > Depois que `dev` for definida como branch padrão, também será possível clonar normalmente sem `-b dev`.
